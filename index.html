@@ -3,386 +3,887 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFinance // Elite Financial Intelligence Dashboard</title>
-    <!-- Include Chart.js via CDN for premium data visualizations -->
+    <title>AuraFinance // Quantum Analytics Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         :root {
-            --bg-main: #030407;
-            --bg-card: #090b11;
-            --bg-sidebar: #06070a;
-            --border-color: #141724;
-            --text-primary: #f9fafb;
-            --text-secondary: #6b7280;
-            --accent-purple: #a855f7;
-            --accent-emerald: #10b981;
-            --accent-coral: #f43f5e;
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --bg-pure: #000000;
+            --card-obsidian: #0a0b10;
+            --card-glass: rgba(10, 11, 16, 0.7);
+            --border-glow: rgba(168, 85, 247, 0.15);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            
+            --neon-purple: #a855f7;
+            --neon-purple-glow: rgba(168, 85, 247, 0.4);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.2);
+            --coral: #f43f5e;
+            --coral-glow: rgba(244, 63, 94, 0.2);
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #4b5563;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
         body {
-            background-color: var(--bg-main);
+            background-color: var(--bg-pure);
             color: var(--text-primary);
-            font-family: var(--font-stack);
-            display: flex;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
         }
 
-        /* PREMIUM LAYOUT STRUCTURE: SIDEBAR + MAIN CONTENT */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
+        /* --- LAYOUT CONFIGURATION --- */
+        .app-container {
             display: flex;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+            gap: 24px;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 260px;
+            background: var(--card-obsidian);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 32px 24px;
+            display: flex;
+            flex-col: column;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            background: linear-gradient(to right, #fff, var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 3rem;
+        aside::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.03), transparent 60%);
+            pointer-events: none;
         }
 
-        .nav-item {
-            list-style: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
-        }
-
-        .nav-item.active {
-            background: rgba(168, 85, 247, 0.1);
-            color: var(--text-primary);
-            border-left: 3px solid var(--accent-purple);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2.5rem;
-            max-width: 1400px;
-            overflow-y: auto;
-        }
-
-        header {
+        .brand {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
-        }
-
-        header h1 {
-            font-size: 1.75rem;
+            gap: 12px;
+            font-size: 1.15rem;
             font-weight: 700;
             letter-spacing: -0.03em;
         }
 
-        /* BENTO GRID ARCHITECTURE */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--neon-purple), #6366f1);
+            box-shadow: 0 0 15px var(--neon-purple-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
+        .brand span {
+            color: var(--neon-purple);
+        }
+
+        .nav-group {
+            margin-top: 48px;
             display: flex;
             flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
         }
 
-        .card.span-2 { grid-column: span 2; }
-        .card.span-3 { grid-column: span 3; }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
 
-        .card-title {
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-color: var(--border-subtle);
+        }
+
+        .nav-item.active {
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: inset 0 0 12px rgba(168, 85, 247, 0.05);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--neon-purple);
+            box-shadow: 0 0 8px var(--neon-purple);
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        .system-status {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-subtle);
+            padding: 16px;
+            border-radius: 14px;
             font-size: 0.75rem;
+        }
+
+        .status-pulse {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--emerald);
+            margin-bottom: 4px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
         }
 
-        .stat-val {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--emerald);
+            animation: pulse 2s infinite;
         }
 
-        /* CONTROLS UI */
-        .controls-wrapper {
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Main Workspace */
+        main {
+            flex-grow: 1;
             display: flex;
-            gap: 2rem;
-            margin-top: 0.5rem;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .control-input {
-            flex: 1;
+        /* Header Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 4px;
         }
 
-        .label-row {
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: var(--card-obsidian);
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* --- BENTO GRID SYSTEM --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* Card Mechanics */
+        .card {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(168, 85, 247, 0.25);
+            box-shadow: 0 0 30px var(--border-glow);
+        }
+
+        /* Spanning Modifiers */
+        .col-span-1 { grid-column: span 1; }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+
+        .card-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title svg {
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Macro Metric Typography */
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+            transition: color 0.2s ease;
+        }
+
+        .metric-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trend-up { color: var(--emerald); font-weight: 500;}
+        .trend-down { color: var(--coral); font-weight: 500;}
+
+        /* --- CUSTOM CONTROLS (SLIDERS) --- */
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
+        .control-label span:last-child {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-purple);
+            font-weight: 600;
+        }
+
+        /* Webkit Range Styling Override */
         input[type="range"] {
-            width: 100%; -webkit-appearance: none; background: #181c2a; height: 4px; border-radius: 99px; outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; cursor: pointer;
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            cursor: pointer;
         }
 
-        /* LEDGER TABLE */
-        table {
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        input[type="range"]:hover::-webkit-slider-runnable-track {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+            -webkit-appearance: none;
+            margin-top: -5.5px;
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: var(--neon-purple);
+        }
+
+        /* Dynamic Progress bar indicator line fallback */
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, var(--neon-purple), #6366f1);
+            box-shadow: 0 0 8px var(--neon-purple-glow);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- GRAPH WORKSPACES --- */
+        .chart-wrapper {
+            width: 100%;
+            height: 240px;
+            position: relative;
+        }
+
+        .donut-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            gap: 16px;
+        }
+
+        .donut-chart-container {
+            width: 55%;
+            height: 180px;
+            position: relative;
+        }
+
+        .chart-legends {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.78rem;
+        }
+
+        .legend-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            padding-left: 16px;
+        }
+
+        /* --- TRANSACTION LEDGER --- */
+        .ledger-container {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
             text-align: left;
+            margin-top: 8px;
         }
 
-        th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.8rem;
+        .ledger-container th {
+            font-size: 0.72rem;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        td {
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(20, 23, 36, 0.5);
+        .ledger-container td {
+            padding: 16px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            transition: background 0.2s ease;
         }
 
-        tr:last-child td { border-bottom: none; }
-
-        .chart-container {
-            position: relative;
-            height: 220px;
-            width: 100%;
+        .ledger-container tr:last-child td {
+            border-bottom: none;
         }
+
+        .ledger-container tr:hover td {
+            background: rgba(255,255,255,0.01);
+        }
+
+        .merchant-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .merchant-icon-fallback {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+        }
+
+        .category-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .amount-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .stamp-cell {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Utilities */
+        .text-emerald { color: var(--emerald); }
+        .text-coral { color: var(--coral); }
     </style>
 </head>
 <body>
 
-    <!-- VISUAL SIDEBAR COMPONENT -->
-    <div class="sidebar">
-        <div>
-            <div class="logo">AURAFINANCE</div>
-            <ul>
-                <li class="nav-item active">Core Intelligence</li>
-                <li class="nav-item">Asset Ledger</li>
-                <li class="nav-item">Projections</li>
-                <li class="nav-item">Settings</li>
-            </ul>
-        </div>
-        <div style="font-size: 0.75rem; color: var(--text-secondary);">System Production Engine v1.4</div>
-    </div>
-
-    <!-- MAIN INTERACTIVE INTERFACE -->
-    <div class="main-content">
-        <header>
+    <div class="app-container">
+        
+        <aside>
             <div>
-                <h1>Financial Intelligence Matrix</h1>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Real-time analytical metrics & trend forecasting</p>
-            </div>
-        </header>
-
-        <div class="bento-grid">
-            <!-- Parameter Tuning Card -->
-            <div class="card span-3">
-                <div class="card-title">Live Engine Parameters</div>
-                <div class="controls-wrapper">
-                    <div class="control-input">
-                        <div class="label-row"><span>Simulated Monthly Inflow</span><span style="color: var(--accent-emerald); font-weight:700;" id="incLabel">$8,500</span></div>
-                        <input type="range" id="incInput" min="2000" max="20000" step="250" value="8500">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                     </div>
-                    <div class="control-input">
-                        <div class="label-row"><span>Simulated Monthly Outflow</span><span style="color: var(--accent-coral); font-weight:700;" id="expLabel">$4,100</span></div>
-                        <input type="range" id="expInput" min="1000" max="15000" step="250" value="4100">
+                    Aura<span>Finance</span>
+                </div>
+
+                <nav class="nav-group">
+                    <a href="#" class="nav-item active">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Core Nodes
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        Liquidity
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        Projections
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Parameters
+                    </a>
+                </nav>
+            </div>
+
+            <div class="system-status">
+                <div class="status-pulse">
+                    <div class="pulse-dot"></div>
+                    System Active
+                </div>
+                <div style="color: var(--text-muted); font-family: monospace; font-size: 0.68rem;">SECURE CONNECTION // NODE 01</div>
+            </div>
+        </aside>
+
+        <main>
+            <header>
+                <div>
+                    <h1>Architectural Analytics Panel</h1>
+                    <p>Real-time continuous cash flow variable calculations</p>
+                </div>
+                <div class="timestamp" id="liveClock">SYSTEM TIME: 12:00:00 UTC</div>
+            </header>
+
+            <div class="bento-grid">
+                
+                <div class="card col-span-1">
+                    <div class="card-title">
+                        Simulation Parameters
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; height: calc(100% - 32px);">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Simulated Monthly Inflow</span>
+                                <span id="lblInflow">$15,000</span>
+                            </div>
+                            <input type="range" id="inputInflow" min="3000" max="30000" step="500" value="15000">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Simulated Monthly Outflow</span>
+                                <span id="lblOutflow">$6,500</span>
+                            </div>
+                            <input type="range" id="inputOutflow" min="1000" max="20000" step="250" value="6500">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Metric Cards -->
-            <div class="card">
-                <div class="card-title">Net Free Cash Flow</div>
-                <div class="stat-val" id="netVal" style="color: var(--accent-emerald);">$4,400</div>
-            </div>
-            <div class="card">
-                <div class="card-title">Capital Liquidity Rate</div>
-                <div class="stat-val" id="rateVal">51%</div>
-            </div>
-            <div class="card">
-                <div class="card-title">Estimated Annual Runway</div>
-                <div class="stat-val" id="runwayVal" style="color: var(--accent-purple);">$52,800</div>
-            </div>
+                <div class="col-span-2 grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                    
+                    <div class="card">
+                        <div class="card-title">
+                            Net Cash Flow
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        </div>
+                        <div class="metric-value" id="valNetFlow">$0,000</div>
+                        <div class="metric-sub" id="netTrendContainer">
+                            </div>
+                    </div>
 
-            <!-- ACTUAL CHART GRAPH VISUALS -->
-            <div class="card span-2">
-                <div class="card-title">6-Month Savings Acceleration Curve</div>
-                <div class="chart-container">
-                    <canvas id="lineChart"></canvas>
+                    <div class="card">
+                        <div class="card-title">
+                            Savings Rate
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                        </div>
+                        <div class="metric-value" id="valSavingsRate">0%</div>
+                        <div class="metric-sub">
+                            Of overall monthly base flow intake
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-fill" id="rateProgress"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">
+                            12-Mo Runway Multiple
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        </div>
+                        <div class="metric-value" id="valRunway">0.0x</div>
+                        <div class="metric-sub" id="runwayStatusText">
+                            Safe overhead multi-margin
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-title">Asset Allocation Distribution</div>
-                <div class="chart-container">
-                    <canvas id="donutChart"></canvas>
+                <div class="card col-span-2">
+                    <div class="card-title">
+                        6-Month Capital Runway Compounding Horizon
+                        <span style="font-family: monospace; font-size: 0.7rem; color: var(--text-muted);">BASE START: $50K</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="projectionChart"></canvas>
+                    </div>
                 </div>
-            </div>
 
-            <!-- TRANSACTION LOG TABLE -->
-            <div class="card span-3">
-                <div class="card-title">Streaming Transaction Ledger</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Origin Source</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th>Allocation Valuation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-weight: 600;">Stripe Clearing Hub</td>
-                            <td>Primary Revenue</td>
-                            <td><span style="color: var(--accent-emerald);">Settled</span></td>
-                            <td style="font-weight: 700; color: var(--accent-emerald);" id="tableInc">+$8,500.00</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">AWS Infrastructure Allocation</td>
-                            <td>Fixed Operations</td>
-                            <td><span style="color: var(--text-secondary);">Processing</span></td>
-                            <td style="font-weight: 700; color: var(--accent-coral);">-$1,800.00</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600;">Variable Capital Outlay</td>
-                            <td>Fluid Overhead</td>
-                            <td><span style="color: var(--text-secondary);">Fluid</span></td>
-                            <td style="font-weight: 700; color: var(--accent-coral);" id="tableExp">-$2,300.00</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="card col-span-1">
+                    <div class="card-title">Budget Allocation Split</div>
+                    <div class="donut-box">
+                        <div class="donut-chart-container">
+                            <canvas id="allocationChart"></canvas>
+                        </div>
+                        <div class="chart-legends">
+                            <div class="legend-item">
+                                <div class="legend-header">
+                                    <div class="legend-dot" style="background: var(--neon-purple);"></div>
+                                    <span>Core Ops (55%)</span>
+                                </div>
+                                <div class="legend-val text-primary" id="donutValCore">$0</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-header">
+                                    <div class="legend-dot" style="background: #6366f1;"></div>
+                                    <span>Growth / R&D (30%)</span>
+                                </div>
+                                <div class="legend-val text-primary" id="donutValGrowth">$0</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-header">
+                                    <div class="legend-dot" style="background: #3b82f6;"></div>
+                                    <span>SaaS Overlay (15%)</span>
+                                </div>
+                                <div class="legend-val text-primary" id="donutValSaaS">$0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card col-span-3">
+                    <div class="card-title">
+                        Active Node Processing Stream
+                        <span style="font-family: monospace; font-size: 0.7rem; color: var(--emerald);">STREAM MODE: STABLE</span>
+                    </div>
+                    <table class="ledger-container">
+                        <thead>
+                            <tr>
+                                <th>Transaction Node origin</th>
+                                <th>Routing Type</th>
+                                <th style="text-align: right;">Calculated Dynamic Vector</th>
+                                <th style="text-align: right; width: 140px;">Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledgerBody">
+                            </tbody>
+                    </table>
+                </div>
+
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- SCRIPT INFRASTRUCTURE HANDLED VIA CHARTJS -->
     <script>
-        const incInput = document.getElementById('incInput');
-        const expInput = document.getElementById('expInput');
-        const incLabel = document.getElementById('incLabel');
-        const expLabel = document.getElementById('expLabel');
-        const netVal = document.getElementById('netVal');
-        const rateVal = document.getElementById('rateVal');
-        const runwayVal = document.getElementById('runwayVal');
-        const tableInc = document.getElementById('tableInc');
-        const tableExp = document.getElementById('tableExp');
+        // --- INSTANTIATE GRAPHIC CONTEXTS ---
+        const projectionCtx = document.getElementById('projectionChart').getContext('2d');
+        const allocationCtx = document.getElementById('allocationChart').getContext('2d');
 
-        // Initialize Real Line Chart
-        const ctxLine = document.getElementById('lineChart').getContext('2d');
-        const lineChart = new Chart(ctxLine, {
-            type: 'line',
-            data: {
-                labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
-                datasets: [{
-                    label: 'Accumulated Liquidity Pipeline',
-                    data: [4400, 8800, 13200, 17600, 22000, 26400],
-                    borderColor: '#a855f7',
-                    backgroundColor: 'rgba(168, 85, 247, 0.05)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#6b7280' } },
-                    y: { grid: { color: 'rgba(20, 23, 36, 0.5)' }, ticks: { color: '#6b7280' } }
+        // Dynamic chart references for manipulation
+        let lineChartInstance;
+        let donutChartInstance;
+
+        // Base Initial Ledger Data Structures (Proportional Weights mapped to slider states)
+        const staticLedgerTemplate = [
+            { id: "TX-902", type: "income", name: "Stripe Production Payout", category: "Inflow Vector", proportionalWeight: 0.60 },
+            { id: "TX-441", type: "expense", name: "AWS Edge Infrastructure", category: "Cloud Overhead", proportionalWeight: 0.45 },
+            { id: "TX-118", type: "income", name: "Enterprise Contract ACH", category: "Inflow Vector", proportionalWeight: 0.40 },
+            { id: "TX-782", type: "expense", name: "Vercel Enterprise Framework", category: "Node Server", proportionalWeight: 0.15 },
+            { id: "TX-309", type: "expense", name: "OpenAI API Matrix Inference", category: "AI Middleware", proportionalWeight: 0.20 }
+        ];
+
+        // --- CHART GENERATION INTERNALS ---
+        function initializeCharts() {
+            // Area Chart Gradient Construction
+            const purpleGradient = projectionCtx.createLinearGradient(0, 0, 0, 220);
+            purpleGradient.addColorStop(0, 'rgba(168, 85, 247, 0.25)');
+            purpleGradient.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+
+            lineChartInstance = new Chart(projectionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['M1 (Jul)', 'M2 (Aug)', 'M3 (Sep)', 'M4 (Oct)', 'M5 (Nov)', 'M6 (Dec)'],
+                    datasets: [{
+                        label: 'Projected Asset Liquidity Portfolio',
+                        data: [50000, 50000, 50000, 50000, 50000, 50000],
+                        borderColor: '#a855f7',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#000000',
+                        pointBorderColor: '#a855f7',
+                        pointHoverRadius: 6,
+                        tension: 0.35,
+                        fill: true,
+                        backgroundColor: purpleGradient
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af', font: { family: 'JetBrains Mono', size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: { color: '#6b7280', font: { family: 'JetBrains Mono', size: 10 } }
+                        }
+                    }
                 }
-            }
-        });
+            });
 
-        // Initialize Real Donut Chart
-        const ctxDonut = document.getElementById('donutChart').getContext('2d');
-        const donutChart = new Chart(ctxDonut, {
-            type: 'doughnut',
-            data: {
-                labels: ['Retained Savings', 'Operational Costs', 'Fluid Outflow'],
-                datasets: [{
-                    data: [4400, 1800, 2300],
-                    backgroundColor: ['#10b981', '#a855f7', '#f43f5e'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                cutout: '75%'
-            }
-        });
-
-        function format(v) { return '$' + v.toLocaleString(); }
-
-        function updateMetrics() {
-            const inc = parseInt(incInput.value);
-            const exp = parseInt(expInput.value);
-            const net = inc - exp;
-
-            incLabel.textContent = format(inc);
-            expLabel.textContent = format(exp);
-            tableInc.textContent = '+' + format(inc) + '.00';
-            
-            // Mathematically distribute operations vs variable expenses for realism
-            const fixedOps = Math.round(exp * 0.44);
-            const fluidOverhead = exp - fixedOps;
-            tableExp.textContent = '-' + format(fluidOverhead) + '.00';
-
-            netVal.textContent = format(net);
-            netVal.style.color = net < 0 ? 'var(--accent-coral)' : 'var(--accent-emerald)';
-
-            const rate = inc > 0 ? Math.round((net / inc) * 100) : 0;
-            rateVal.textContent = (net > 0 ? rate : 0) + '%';
-            runwayVal.textContent = format(Math.max(0, net * 12));
-
-            // Update charts dynamically with real numbers on slider interaction
-            const lineData = [];
-            for (let i = 1; i <= 6; i++) {
-                lineData.push(Math.max(0, net * i));
-            }
-            lineChart.data.datasets[0].data = lineData;
-            lineChart.update('none'); // smooth fast updates without visual lag
-
-            donutChart.data.datasets[0].data = [Math.max(0, net), fixedOps, fluidOverhead];
-            donutChart.update('none');
+            // Donut Budget Allocation Construction
+            donutChartInstance = new Chart(allocationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Core Ops', 'Growth', 'SaaS'],
+                    datasets: [{
+                        data: [55, 30, 15],
+                        backgroundColor: ['#a855f7', '#6366f1', '#3b82f6'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '76%'
+                }
+            });
         }
 
-        incInput.addEventListener('input', updateMetrics);
-        expInput.addEventListener('input', updateMetrics);
-        updateMetrics();
+        // --- MATH RECALCULATION CALCULATOR ENGINE ---
+        function processFinancialMatrix() {
+            // Read UI inputs
+            const inflow = parseInt(document.getElementById('inputInflow').value, 10);
+            const outflow = parseInt(document.getElementById('inputOutflow').value, 10);
+
+            // Update range tags on-screen
+            document.getElementById('lblInflow').innerText = `$${inflow.toLocaleString()}`;
+            document.getElementById('lblOutflow').innerText = `$${outflow.toLocaleString()}`;
+
+            // Core Metrics Computations
+            const netFlow = inflow - outflow;
+            const savingsRate = inflow > 0 ? Math.max(0, Math.round((netFlow / inflow) * 100)) : 0;
+            const runway = outflow > 0 ? ((netFlow * 12) / outflow) : 0;
+
+            // Render Core Metrics
+            const netFlowEl = document.getElementById('valNetFlow');
+            netFlowEl.innerText = `${netFlow >= 0 ? '' : '-'}$${Math.abs(netFlow).toLocaleString()}`;
+            
+            const trendContainer = document.getElementById('netTrendContainer');
+            if (netFlow >= 0) {
+                netFlowEl.style.color = 'var(--emerald)';
+                trendContainer.innerHTML = `<span class="trend-up">▲ Dynamic Delta Surplus</span>`;
+            } else {
+                netFlowEl.style.color = 'var(--coral)';
+                trendContainer.innerHTML = `<span class="trend-down">▼ Asset Deficit Flow</span>`;
+            }
+
+            // Savings Progress Bar Mapping
+            document.getElementById('valSavingsRate').innerText = `${savingsRate}%`;
+            document.getElementById('rateProgress').style.width = `${Math.min(savingsRate, 100)}%`;
+
+            // Runway Metrics Mapping
+            const runwayEl = document.getElementById('valRunway');
+            const runwayStatusText = document.getElementById('runwayStatusText');
+            
+            if (runway <= 0) {
+                runwayEl.innerText = "0.0x";
+                runwayEl.style.color = 'var(--coral)';
+                runwayStatusText.innerText = "Critical depletion vector";
+                runwayStatusText.className = "metric-sub text-coral";
+            } else {
+                runwayEl.innerText = `${parseFloat(runway).toFixed(1)}x`;
+                runwayEl.style.color = 'var(--text-primary)';
+                if (runway > 3) {
+                    runwayStatusText.innerText = "Optimal Capital reserves";
+                    runwayStatusText.className = "metric-sub text-emerald";
+                } else {
+                    runwayStatusText.innerText = "Accelerated burn window";
+                    runwayStatusText.className = "metric-sub";
+                }
+            }
+
+            // Update Dynamic Proportions on Budget Legends
+            const coreVal = Math.round(outflow * 0.55);
+            const growthVal = Math.round(outflow * 0.30);
+            const saasVal = Math.round(outflow * 0.15);
+            document.getElementById('donutValCore').innerText = `$${coreVal.toLocaleString()}`;
+            document.getElementById('donutValGrowth').innerText = `$${growthVal.toLocaleString()}`;
+            document.getElementById('donutValSaaS').innerText = `$${saasVal.toLocaleString()}`;
+
+            // Update Donut Graph without complete rebuilds
+            donutChartInstance.data.datasets[0].data = [coreVal, growthVal, saasVal];
+            donutChartInstance.update('none'); // Update using streamlined rendering path
+
+            // Calculate 6-Month Compounding Line Data Points
+            let baseCapital = 50000;
+            const projectedDataPoints = [];
+            for (let i = 1; i <= 6; i++) {
+                baseCapital += netFlow;
+                projectedDataPoints.push(baseCapital < 0 ? 0 : baseCapital);
+            }
+
+            lineChartInstance.data.datasets[0].data = projectedDataPoints;
+            lineChartInstance.update('none');
+
+            // Render Dynamic Transaction Ledger Rows
+            const ledgerBody = document.getElementById('ledgerBody');
+            ledgerBody.innerHTML = '';
+
+            staticLedgerTemplate.forEach(tx => {
+                const calculatedValue = tx.type === 'income' 
+                    ? Math.round(inflow * tx.proportionalWeight)
+                    : Math.round(outflow * tx.proportionalWeight);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="merchant-cell">
+                            <div class="merchant-icon-fallback">${tx.id}</div>
+                            <span>${tx.name}</span>
+                        </div>
+                    </td>
+                    <td><span class="category-tag">${tx.category}</span></td>
+                    <td class="amount-cell ${tx.type === 'income' ? 'text-emerald' : 'text-coral'}">
+                        ${tx.type === 'income' ? '+' : '-'}$${calculatedValue.toLocaleString()}
+                    </td>
+                    <td class="stamp-cell" style="text-align: right; font-family: monospace;">Processing Live</td>
+                `;
+                ledgerBody.appendChild(row);
+            });
+        }
+
+        // --- REALTIME TIME STAMP CLOCK ---
+        function updateLiveClock() {
+            const now = new Date();
+            const timeString = now.toISOString().replace('T', ' ').substring(0, 19);
+            document.getElementById('liveClock').innerText = `SYSTEM RECORD // UTC: ${timeString}`;
+        }
+
+        // --- EXECUTION CORE SYSTEM INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            processFinancialMatrix();
+            setInterval(updateLiveClock, 1000);
+            updateLiveClock();
+
+            // Link listeners cleanly to input changes
+            document.getElementById('inputInflow').addEventListener('input', processFinancialMatrix);
+            document.getElementById('inputOutflow').addEventListener('input', processFinancialMatrix);
+        });
     </script>
 </body>
 </html>
