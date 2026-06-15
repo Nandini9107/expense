@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFinance // Predictive Financial Intelligence</title>
+    <title>AuraFinance // Elite Financial Intelligence Dashboard</title>
+    <!-- Include Chart.js via CDN for premium data visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-main: #050508;
-            --bg-card: #0b0d14;
-            --border-color: #161925;
-            --text-primary: #f3f4f6;
-            --text-secondary: #8a92a6;
+            --bg-main: #030407;
+            --bg-card: #090b11;
+            --bg-sidebar: #06070a;
+            --border-color: #141724;
+            --text-primary: #f9fafb;
+            --text-secondary: #6b7280;
+            --accent-purple: #a855f7;
             --accent-emerald: #10b981;
             --accent-coral: #f43f5e;
-            --accent-violet: #8b5cf6;
-            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,280 +25,364 @@
             background-color: var(--bg-main);
             color: var(--text-primary);
             font-family: var(--font-stack);
-            padding: 3rem 1.5rem;
             display: flex;
-            justify-content: center;
             min-height: 100vh;
         }
 
-        .dashboard-container {
-            width: 100%;
-            max-width: 1200px;
+        /* PREMIUM LAYOUT STRUCTURE: SIDEBAR + MAIN CONTENT */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(to right, #fff, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+        }
+
+        .nav-item {
+            list-style: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--text-primary);
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            max-width: 1400px;
+            overflow-y: auto;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
         }
 
         header h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            background: linear-gradient(to right, #ffffff, #a3a3a3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
         }
 
-        .badge {
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            color: var(--accent-violet);
-            padding: 0.4rem 0.8rem;
-            border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* BENTO GRID */
-        .grid-layout {
+        /* BENTO GRID ARCHITECTURE */
+        .bento-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
-
-        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
 
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
         }
+
+        .card.span-2 { grid-column: span 2; }
+        .card.span-3 { grid-column: span 3; }
 
         .card-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
             color: var(--text-secondary);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
 
-        /* CONTROLS & SLIDERS */
-        .slider-box { display: flex; flex-direction: column; gap: 2rem; }
-        .control-group { position: relative; }
-        .label-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; }
-        .val-display { font-weight: 700; font-size: 1.1rem; }
-        .inc-color { color: var(--accent-emerald); }
-        .exp-color { color: var(--accent-coral); }
+        .stat-val {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        /* CONTROLS UI */
+        .controls-wrapper {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .control-input {
+            flex: 1;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
 
         input[type="range"] {
-            width: 100%; -webkit-appearance: none; background: #1a1d2e; height: 6px; border-radius: 99px; outline: none;
+            width: 100%; -webkit-appearance: none; background: #181c2a; height: 4px; border-radius: 99px; outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5); transition: transform 0.1s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-        /* INTEL GRID RIGHT */
-        .intel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        @media (max-width: 600px) { .intel-grid { grid-template-columns: 1fr; } }
-
-        .metric-num { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-top: 0.5rem; }
-
-        /* HEALTH BAR */
-        .full-width { grid-column: span 2; }
-        @media (max-width: 600px) { .full-width { grid-column: span 1; } }
-        
-        .progress-track { background: #161824; height: 8px; border-radius: 99px; margin-top: 1rem; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: var(--accent-emerald); transition: width 0.5s ease, background-color 0.3s; }
-
-        /* FORECAST TILES */
-        .forecast-container { display: flex; gap: 1rem; margin-top: 0.5rem; }
-        .forecast-tile { flex: 1; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--accent-violet); }
-        .fc-time { font-size: 0.7rem; font-weight: 700; color: var(--accent-violet); text-transform: uppercase; }
-        .fc-amt { font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; }
-
-        /* AI INSIGHTS BOX */
-        .insight-box {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(0,0,0,0) 100%);
-            border: 1px dashed rgba(139, 92, 246, 0.3);
-            border-radius: 12px; padding: 1rem; margin-top: 1rem; font-size: 0.9rem; display: flex; gap: 0.7rem; align-items: center;
+            -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; cursor: pointer;
         }
 
-        /* REALISTIC TRANSACTION LOG */
-        .transaction-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
-        .tx-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 0.85rem; border-bottom: 1px solid rgba(22, 25, 37, 0.5); font-size: 0.9rem;
+        /* LEDGER TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
         }
-        .tx-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .tx-info { display: flex; flex-direction: column; }
-        .tx-name { font-weight: 600; }
-        .tx-date { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.1rem; }
-        .tx-amt { font-weight: 700; }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(20, 23, 36, 0.5);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
+    <!-- VISUAL SIDEBAR COMPONENT -->
+    <div class="sidebar">
+        <div>
+            <div class="logo">AURAFINANCE</div>
+            <ul>
+                <li class="nav-item active">Core Intelligence</li>
+                <li class="nav-item">Asset Ledger</li>
+                <li class="nav-item">Projections</li>
+                <li class="nav-item">Settings</li>
+            </ul>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary);">System Production Engine v1.4</div>
+    </div>
+
+    <!-- MAIN INTERACTIVE INTERFACE -->
+    <div class="main-content">
         <header>
             <div>
-                <h1>AuraFinance</h1>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">Predictive Financial Intelligence Engine</p>
+                <h1>Financial Intelligence Matrix</h1>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Real-time analytical metrics & trend forecasting</p>
             </div>
-            <div class="badge">v1.0 Engine Active</div>
         </header>
 
-        <div class="grid-layout">
-            <!-- LEFT PANEL: CONTROLS & LEDGER -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                <div class="card slider-box">
-                    <div class="card-title" style="margin-bottom:0;">Live Engine Configuration</div>
-                    <div class="control-group">
-                        <div class="label-row"><span>Simulated Net Income</span><span class="val-display inc-color" id="incLabel">$5,000</span></div>
-                        <input type="range" id="incInput" min="1000" max="15000" step="100" value="6200">
+        <div class="bento-grid">
+            <!-- Parameter Tuning Card -->
+            <div class="card span-3">
+                <div class="card-title">Live Engine Parameters</div>
+                <div class="controls-wrapper">
+                    <div class="control-input">
+                        <div class="label-row"><span>Simulated Monthly Inflow</span><span style="color: var(--accent-emerald); font-weight:700;" id="incLabel">$8,500</span></div>
+                        <input type="range" id="incInput" min="2000" max="20000" step="250" value="8500">
                     </div>
-                    <div class="control-group">
-                        <div class="label-row"><span>Simulated Base Expenses</span><span class="val-display exp-color" id="expLabel">$3,200</span></div>
-                        <input type="range" id="expInput" min="500" max="10000" step="100" value="3400">
-                    </div>
-                </div>
-
-                <!-- NEW FEATURE: Live Mock Ledger -->
-                <div class="card">
-                    <div class="card-title">Simulated Streaming Ledger</div>
-                    <div class="transaction-list">
-                        <div class="tx-item">
-                            <div class="tx-info"><span class="tx-name">Stripe Payout (Primary)</span><span class="tx-date">Active Recurring Stream</span></div>
-                            <span class="tx-amt inc-color">+$5,000.00</span>
-                        </div>
-                        <div class="tx-item">
-                            <div class="tx-info"><span class="tx-name">AWS Cloud Infrastructure</span><span class="tx-date">Variable Overhead</span></div>
-                            <span class="tx-amt exp-color">-$1,200.00</span>
-                        </div>
-                        <div class="tx-item">
-                            <div class="tx-info"><span class="tx-name">SaaS Platform Subscriptions</span><span class="tx-date">Fixed Operating Cost</span></div>
-                            <span class="tx-amt exp-color">-$450.00</span>
-                        </div>
-                        <div class="tx-item">
-                            <div class="tx-info"><span class="tx-name">Discretionary Capital Outlay</span><span class="tx-date">Fluid Variable Expense</span></div>
-                            <span class="tx-amt exp-color" id="fluidLedgerAmt">-$1,750.00</span>
-                        </div>
+                    <div class="control-input">
+                        <div class="label-row"><span>Simulated Monthly Outflow</span><span style="color: var(--accent-coral); font-weight:700;" id="expLabel">$4,100</span></div>
+                        <input type="range" id="expInput" min="1000" max="15000" step="250" value="4100">
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: ANALYTICS INTEL -->
-            <div class="intel-grid">
-                <div class="card">
-                    <div class="card-title">Net Free Cash Flow</div>
-                    <div class="metric-num" id="netFlow">$2,800</div>
-                </div>
+            <!-- Metric Cards -->
+            <div class="card">
+                <div class="card-title">Net Free Cash Flow</div>
+                <div class="stat-val" id="netVal" style="color: var(--accent-emerald);">$4,400</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Capital Liquidity Rate</div>
+                <div class="stat-val" id="rateVal">51%</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Estimated Annual Runway</div>
+                <div class="stat-val" id="runwayVal" style="color: var(--accent-purple);">$52,800</div>
+            </div>
 
-                <div class="card">
-                    <div class="card-title">Net Capital Savings Rate</div>
-                    <div class="metric-num" id="saveRate">45%</div>
+            <!-- ACTUAL CHART GRAPH VISUALS -->
+            <div class="card span-2">
+                <div class="card-title">6-Month Savings Acceleration Curve</div>
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
                 </div>
+            </div>
 
-                <div class="card full-width">
-                    <div class="card-title">Liquidity Runway Metrics</div>
-                    <div id="healthStatus" style="font-weight: 700; font-size: 1.15rem;">Optimal Balance Sheet Architecture</div>
-                    <div class="progress-track"><div class="progress-fill" id="healthBar"></div></div>
-                    
-                    <!-- NEW FEATURE: Contextual Intelligence Messaging -->
-                    <div class="insight-box">
-                        <span style="font-size: 1.2rem;">✨</span>
-                        <span id="aiInsight" style="color: #c4b5fd;">Analyzing financial trajectory...</span>
-                    </div>
+            <div class="card">
+                <div class="card-title">Asset Allocation Distribution</div>
+                <div class="chart-container">
+                    <canvas id="donutChart"></canvas>
                 </div>
+            </div>
 
-                <div class="card full-width">
-                    <div class="card-title">Linear Capital Projections Matrix</div>
-                    <div class="forecast-container">
-                        <div class="forecast-tile"><div class="fc-time">Q1 Horizon</div><div class="fc-amt" id="fc3">$0</div></div>
-                        <div class="forecast-tile"><div class="fc-time">H1 Horizon</div><div class="fc-amt" id="fc6">$0</div></div>
-                        <div class="forecast-tile"><div class="fc-time">Y1 Horizon</div><div class="fc-amt" id="fc12">$0</div></div>
-                    </div>
-                </div>
+            <!-- TRANSACTION LOG TABLE -->
+            <div class="card span-3">
+                <div class="card-title">Streaming Transaction Ledger</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Origin Source</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Allocation Valuation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;">Stripe Clearing Hub</td>
+                            <td>Primary Revenue</td>
+                            <td><span style="color: var(--accent-emerald);">Settled</span></td>
+                            <td style="font-weight: 700; color: var(--accent-emerald);" id="tableInc">+$8,500.00</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">AWS Infrastructure Allocation</td>
+                            <td>Fixed Operations</td>
+                            <td><span style="color: var(--text-secondary);">Processing</span></td>
+                            <td style="font-weight: 700; color: var(--accent-coral);">-$1,800.00</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Variable Capital Outlay</td>
+                            <td>Fluid Overhead</td>
+                            <td><span style="color: var(--text-secondary);">Fluid</span></td>
+                            <td style="font-weight: 700; color: var(--accent-coral);" id="tableExp">-$2,300.00</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT INFRASTRUCTURE HANDLED VIA CHARTJS -->
     <script>
         const incInput = document.getElementById('incInput');
         const expInput = document.getElementById('expInput');
         const incLabel = document.getElementById('incLabel');
         const expLabel = document.getElementById('expLabel');
-        const netFlow = document.getElementById('netFlow');
-        const saveRate = document.getElementById('saveRate');
-        const healthStatus = document.getElementById('healthStatus');
-        const healthBar = document.getElementById('healthBar');
-        const aiInsight = document.getElementById('aiInsight');
-        const fluidLedgerAmt = document.getElementById('fluidLedgerAmt');
-        
-        const fc3 = document.getElementById('fc3');
-        const fc6 = document.getElementById('fc6');
-        const fc12 = document.getElementById('fc12');
+        const netVal = document.getElementById('netVal');
+        const rateVal = document.getElementById('rateVal');
+        const runwayVal = document.getElementById('runwayVal');
+        const tableInc = document.getElementById('tableInc');
+        const tableExp = document.getElementById('tableExp');
 
-        function fmt(n) { return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString(); }
+        // Initialize Real Line Chart
+        const ctxLine = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+                datasets: [{
+                    label: 'Accumulated Liquidity Pipeline',
+                    data: [4400, 8800, 13200, 17600, 22000, 26400],
+                    borderColor: '#a855f7',
+                    backgroundColor: 'rgba(168, 85, 247, 0.05)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#6b7280' } },
+                    y: { grid: { color: 'rgba(20, 23, 36, 0.5)' }, ticks: { color: '#6b7280' } }
+                }
+            }
+        });
 
-        function runEngine() {
+        // Initialize Real Donut Chart
+        const ctxDonut = document.getElementById('donutChart').getContext('2d');
+        const donutChart = new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Retained Savings', 'Operational Costs', 'Fluid Outflow'],
+                datasets: [{
+                    data: [4400, 1800, 2300],
+                    backgroundColor: ['#10b981', '#a855f7', '#f43f5e'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                cutout: '75%'
+            }
+        });
+
+        function format(v) { return '$' + v.toLocaleString(); }
+
+        function updateMetrics() {
             const inc = parseInt(incInput.value);
             const exp = parseInt(expInput.value);
-
-            incLabel.textContent = fmt(inc);
-            expLabel.textContent = fmt(exp);
-
-            // Back-calculate a variable ledger row based on sliders to make the ledger look interactive and alive
-            const dynamicFluid = exp - 1650;
-            fluidLedgerAmt.textContent = fmt(-Math.max(0, dynamicFluid)) + '.00';
-
             const net = inc - exp;
-            netFlow.textContent = fmt(net);
-            netFlow.style.color = net < 0 ? 'var(--accent-coral)' : 'var(--accent-emerald)';
+
+            incLabel.textContent = format(inc);
+            expLabel.textContent = format(exp);
+            tableInc.textContent = '+' + format(inc) + '.00';
+            
+            // Mathematically distribute operations vs variable expenses for realism
+            const fixedOps = Math.round(exp * 0.44);
+            const fluidOverhead = exp - fixedOps;
+            tableExp.textContent = '-' + format(fluidOverhead) + '.00';
+
+            netVal.textContent = format(net);
+            netVal.style.color = net < 0 ? 'var(--accent-coral)' : 'var(--accent-emerald)';
 
             const rate = inc > 0 ? Math.round((net / inc) * 100) : 0;
-            saveRate.textContent = (net > 0 ? rate : 0) + '%';
+            rateVal.textContent = (net > 0 ? rate : 0) + '%';
+            runwayVal.textContent = format(Math.max(0, net * 12));
 
-            const ratio = (exp / inc) * 100;
-            healthBar.style.width = Math.min(ratio, 100) + '%';
-
-            if (ratio <= 45) {
-                healthStatus.textContent = 'High-Alpha Capital Retention';
-                healthBar.style.backgroundColor = 'var(--accent-emerald)';
-                aiInsight.textContent = "Your asset scaling velocity is high. Recommend routing surplus liquidity into debt-clearing or long-term investments.";
-            } else if (ratio <= 75) {
-                healthStatus.textContent = 'Balanced Budgetary Equilibrium';
-                healthBar.style.backgroundColor = '#f59e0b';
-                aiInsight.textContent = "Operational expenditures are within safe margins, but scaling non-discretionary costs further could flatten your growth curve.";
-            } else {
-                healthStatus.textContent = 'Asymmetric Budgetary Deficit';
-                healthBar.style.backgroundColor = 'var(--accent-coral)';
-                aiInsight.textContent = "Critical cash burn detected. Outflows are destabilizing your net equity positions. Overhead structural reduction advised.";
+            // Update charts dynamically with real numbers on slider interaction
+            const lineData = [];
+            for (let i = 1; i <= 6; i++) {
+                lineData.push(Math.max(0, net * i));
             }
+            lineChart.data.datasets[0].data = lineData;
+            lineChart.update('none'); // smooth fast updates without visual lag
 
-            fc3.textContent = fmt(Math.max(0, net * 3));
-            fc6.textContent = fmt(Math.max(0, net * 6));
-            fc12.textContent = fmt(Math.max(0, net * 12));
+            donutChart.data.datasets[0].data = [Math.max(0, net), fixedOps, fluidOverhead];
+            donutChart.update('none');
         }
 
-        incInput.addEventListener('input', runEngine);
-        expInput.addEventListener('input', runEngine);
-        runEngine();
+        incInput.addEventListener('input', updateMetrics);
+        expInput.addEventListener('input', updateMetrics);
+        updateMetrics();
     </script>
 </body>
 </html>
-            
-                    
-            
