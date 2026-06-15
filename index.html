@@ -3,365 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFinance // Premium Financial Intelligence</title>
+    <title>AuraFinance // Predictive Financial Intelligence</title>
     <style>
-        /* --- PREMIUM DESIGN SYSTEM --- */
         :root {
-            --bg-main: #090a0f;
-            --bg-card: #12141c;
-            --bg-card-hover: #171a26;
-            --border-color: #1e2235;
+            --bg-main: #050508;
+            --bg-card: #0b0d14;
+            --border-color: #161925;
             --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
+            --text-secondary: #8a92a6;
             --accent-emerald: #10b981;
             --accent-coral: #f43f5e;
             --accent-violet: #8b5cf6;
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-main);
             color: var(--text-primary);
             font-family: var(--font-stack);
-            padding: 2rem;
+            padding: 3rem 1.5rem;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
-        /* --- DASHBOARD WRAPPER --- */
         .dashboard-container {
             width: 100%;
-            max-width: 1100px;
-            background: linear-gradient(145deg, #11131f, #0c0d14);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
         }
 
-        /* --- HEADER --- */
         header {
-            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 1.5rem;
         }
 
         header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            background: linear-gradient(to right, #fff, #9ca3af);
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(to right, #ffffff, #a3a3a3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        header p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
+        .badge {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--accent-violet);
+            padding: 0.4rem 0.8rem;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        /* --- BENTO GRID LAYOUT --- */
-        .dashboard-grid {
+        /* BENTO GRID */
+        .grid-layout {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 1.5rem;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        /* --- CARD STYLES --- */
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.75rem;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: #2e3552;
-            background-color: var(--bg-card-hover);
-            transform: translateY(-2px);
-        }
-
-        .card-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        /* --- CONTROLS FORM --- */
-        .control-group {
-            margin-bottom: 1.75rem;
-        }
-
-        .control-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .control-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .control-label span.value {
-            font-weight: 700;
-        }
-
-        .income-val { color: var(--accent-emerald); }
-        .expense-val { color: var(--accent-coral); }
-
-        input[type="range"] {
-            width: 100%;
-            -webkit-appearance: none;
-            background: #23283d;
-            height: 6px;
-            border-radius: 3px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--text-primary);
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        /* --- METRICS DISPLAY --- */
-        .metrics-display {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .big-number {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-top: 0.5rem;
-        }
-
-        /* --- PROGRESS BAR --- */
-        .progress-container {
-            background-color: #23283d;
-            height: 8px;
-            border-radius: 4px;
-            margin-top: 1rem;
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
             overflow: hidden;
         }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-emerald);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
-        }
-
-        /* --- FORECAST TIMELINE --- */
-        .timeline {
-            grid-column: span 2;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .metrics-display { grid-template-columns: 1fr; }
-            .timeline { grid-column: span 1; flex-direction: column; }
-        }
-
-        .timeline-node {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            border-left: 3px solid var(--accent-violet);
-            padding: 0.75rem 1rem;
-            border-radius: 0 12px 12px 0;
-        }
-
-        .timeline-time {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--accent-violet);
+        .card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
         }
 
-        .timeline-cash {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-top: 0.25rem;
+        /* CONTROLS & SLIDERS */
+        .slider-box { display: flex; flex-direction: column; gap: 2rem; }
+        .control-group { position: relative; }
+        .label-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; }
+        .val-display { font-weight: 700; font-size: 1.1rem; }
+        .inc-color { color: var(--accent-emerald); }
+        .exp-color { color: var(--accent-coral); }
+
+        input[type="range"] {
+            width: 100%; -webkit-appearance: none; background: #1a1d2e; height: 6px; border-radius: 99px; outline: none;
         }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* INTEL GRID RIGHT */
+        .intel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        @media (max-width: 600px) { .intel-grid { grid-template-columns: 1fr; } }
+
+        .metric-num { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-top: 0.5rem; }
+
+        /* HEALTH BAR */
+        .full-width { grid-column: span 2; }
+        @media (max-width: 600px) { .full-width { grid-column: span 1; } }
+        
+        .progress-track { background: #161824; height: 8px; border-radius: 99px; margin-top: 1rem; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-emerald); transition: width 0.5s ease, background-color 0.3s; }
+
+        /* FORECAST TILES */
+        .forecast-container { display: flex; gap: 1rem; margin-top: 0.5rem; }
+        .forecast-tile { flex: 1; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--accent-violet); }
+        .fc-time { font-size: 0.7rem; font-weight: 700; color: var(--accent-violet); text-transform: uppercase; }
+        .fc-amt { font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; }
+
+        /* AI INSIGHTS BOX */
+        .insight-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(0,0,0,0) 100%);
+            border: 1px dashed rgba(139, 92, 246, 0.3);
+            border-radius: 12px; padding: 1rem; margin-top: 1rem; font-size: 0.9rem; display: flex; gap: 0.7rem; align-items: center;
+        }
+
+        /* REALISTIC TRANSACTION LOG */
+        .transaction-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
+        .tx-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 0.85rem; border-bottom: 1px solid rgba(22, 25, 37, 0.5); font-size: 0.9rem;
+        }
+        .tx-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .tx-info { display: flex; flex-direction: column; }
+        .tx-name { font-weight: 600; }
+        .tx-date { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.1rem; }
+        .tx-amt { font-weight: 700; }
     </style>
 </head>
 <body>
 
     <div class="dashboard-container">
         <header>
-            <h1>AuraFinance</h1>
-            <p>Predictive Financial Intelligence Engine</p>
+            <div>
+                <h1>AuraFinance</h1>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">Predictive Financial Intelligence Engine</p>
+            </div>
+            <div class="badge">v1.0 Engine Active</div>
         </header>
 
-        <div class="dashboard-grid">
-            <!-- Left Side: Controls -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
-                <div class="card-title">Adjust Parameters</div>
-                
-                <div class="control-group">
-                    <div class="control-label">
-                        <span>Monthly Income</span>
-                        <span class="value income-val" id="incomeLabel">$5,000</span>
+        <div class="grid-layout">
+            <!-- LEFT PANEL: CONTROLS & LEDGER -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="card slider-box">
+                    <div class="card-title" style="margin-bottom:0;">Live Engine Configuration</div>
+                    <div class="control-group">
+                        <div class="label-row"><span>Simulated Net Income</span><span class="val-display inc-color" id="incLabel">$5,000</span></div>
+                        <input type="range" id="incInput" min="1000" max="15000" step="100" value="6200">
                     </div>
-                    <input type="range" id="incomeInput" min="1000" max="15000" step="100" value="5000">
+                    <div class="control-group">
+                        <div class="label-row"><span>Simulated Base Expenses</span><span class="val-display exp-color" id="expLabel">$3,200</span></div>
+                        <input type="range" id="expInput" min="500" max="10000" step="100" value="3400">
+                    </div>
                 </div>
 
-                <div class="control-group">
-                    <div class="control-label">
-                        <span>Monthly Expenses</span>
-                        <span class="value expense-val" id="expenseLabel">$3,200</span>
+                <!-- NEW FEATURE: Live Mock Ledger -->
+                <div class="card">
+                    <div class="card-title">Simulated Streaming Ledger</div>
+                    <div class="transaction-list">
+                        <div class="tx-item">
+                            <div class="tx-info"><span class="tx-name">Stripe Payout (Primary)</span><span class="tx-date">Active Recurring Stream</span></div>
+                            <span class="tx-amt inc-color">+$5,000.00</span>
+                        </div>
+                        <div class="tx-item">
+                            <div class="tx-info"><span class="tx-name">AWS Cloud Infrastructure</span><span class="tx-date">Variable Overhead</span></div>
+                            <span class="tx-amt exp-color">-$1,200.00</span>
+                        </div>
+                        <div class="tx-item">
+                            <div class="tx-info"><span class="tx-name">SaaS Platform Subscriptions</span><span class="tx-date">Fixed Operating Cost</span></div>
+                            <span class="tx-amt exp-color">-$450.00</span>
+                        </div>
+                        <div class="tx-item">
+                            <div class="tx-info"><span class="tx-name">Discretionary Capital Outlay</span><span class="tx-date">Fluid Variable Expense</span></div>
+                            <span class="tx-amt exp-color" id="fluidLedgerAmt">-$1,750.00</span>
+                        </div>
                     </div>
-                    <input type="range" id="expenseInput" min="500" max="10000" step="100" value="3200">
                 </div>
             </div>
 
-            <!-- Right Side: Bento Intelligence Grid -->
-            <div class="metrics-display">
-                <!-- Box 1: Net Cash Flow -->
+            <!-- RIGHT PANEL: ANALYTICS INTEL -->
+            <div class="intel-grid">
                 <div class="card">
-                    <div class="card-title">Net Monthly Cash Flow</div>
-                    <div class="big-number" id="netFlow">$1,800</div>
+                    <div class="card-title">Net Free Cash Flow</div>
+                    <div class="metric-num" id="netFlow">$2,800</div>
                 </div>
 
-                <!-- Box 2: Savings Rate -->
                 <div class="card">
-                    <div class="card-title">Savings Rate</div>
-                    <div class="big-number" id="savingsRate">36%</div>
+                    <div class="card-title">Net Capital Savings Rate</div>
+                    <div class="metric-num" id="saveRate">45%</div>
                 </div>
 
-                <!-- Box 3: Budget Health Meter -->
-                <div class="card" style="grid-column: span 2;" id="healthCard">
-                    <div class="card-title">Budget Health & Threshold</div>
-                    <div id="healthStatus" style="font-weight: 600; font-size: 1.1rem;">Optimal Spending Range</div>
-                    <div class="progress-container">
-                        <div class="progress-bar" id="healthBar"></div>
+                <div class="card full-width">
+                    <div class="card-title">Liquidity Runway Metrics</div>
+                    <div id="healthStatus" style="font-weight: 700; font-size: 1.15rem;">Optimal Balance Sheet Architecture</div>
+                    <div class="progress-track"><div class="progress-fill" id="healthBar"></div></div>
+                    
+                    <!-- NEW FEATURE: Contextual Intelligence Messaging -->
+                    <div class="insight-box">
+                        <span style="font-size: 1.2rem;">✨</span>
+                        <span id="aiInsight" style="color: #c4b5fd;">Analyzing financial trajectory...</span>
                     </div>
                 </div>
 
-                <!-- Box 4: Forecasting Timeline -->
-                <div class="timeline">
-                    <div class="timeline-node">
-                        <div class="timeline-time">3 Month Forecast</div>
-                        <div class="timeline-cash" id="forecast3">$5,400</div>
-                    </div>
-                    <div class="timeline-node">
-                        <div class="timeline-time">6 Month Forecast</div>
-                        <div class="timeline-cash" id="forecast6">$10,800</div>
-                    </div>
-                    <div class="timeline-node">
-                        <div class="timeline-time">12 Month Forecast</div>
-                        <div class="timeline-cash" id="forecast12">$21,600</div>
+                <div class="card full-width">
+                    <div class="card-title">Linear Capital Projections Matrix</div>
+                    <div class="forecast-container">
+                        <div class="forecast-tile"><div class="fc-time">Q1 Horizon</div><div class="fc-amt" id="fc3">$0</div></div>
+                        <div class="forecast-tile"><div class="fc-time">H1 Horizon</div><div class="fc-amt" id="fc6">$0</div></div>
+                        <div class="forecast-tile"><div class="fc-time">Y1 Horizon</div><div class="fc-amt" id="fc12">$0</div></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- --- CORE CALCULATION ENGINE --- -->
     <script>
-        const incomeInput = document.getElementById('incomeInput');
-        const expenseInput = document.getElementById('expenseInput');
-        
-        const incomeLabel = document.getElementById('incomeLabel');
-        const expenseLabel = document.getElementById('expenseLabel');
-        
-        const netFlowDisplay = document.getElementById('netFlow');
-        const savingsRateDisplay = document.getElementById('savingsRate');
+        const incInput = document.getElementById('incInput');
+        const expInput = document.getElementById('expInput');
+        const incLabel = document.getElementById('incLabel');
+        const expLabel = document.getElementById('expLabel');
+        const netFlow = document.getElementById('netFlow');
+        const saveRate = document.getElementById('saveRate');
         const healthStatus = document.getElementById('healthStatus');
         const healthBar = document.getElementById('healthBar');
+        const aiInsight = document.getElementById('aiInsight');
+        const fluidLedgerAmt = document.getElementById('fluidLedgerAmt');
         
-        const forecast3 = document.getElementById('forecast3');
-        const forecast6 = document.getElementById('forecast6');
-        const forecast12 = document.getElementById('forecast12');
+        const fc3 = document.getElementById('fc3');
+        const fc6 = document.getElementById('fc6');
+        const fc12 = document.getElementById('fc12');
 
-        function formatCurrency(num) {
-            if (num < 0) {
-                return '-$' + Math.abs(num).toLocaleString();
-            }
-            return '$' + num.toLocaleString();
-        }
+        function fmt(n) { return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString(); }
 
-        function calculateDashboard() {
-            const income = parseInt(incomeInput.value);
-            const expense = parseInt(expenseInput.value);
+        function runEngine() {
+            const inc = parseInt(incInput.value);
+            const exp = parseInt(expInput.value);
 
-            // Update range labels
-            incomeLabel.textContent = formatCurrency(income);
-            expenseLabel.textContent = formatCurrency(expense);
+            incLabel.textContent = fmt(inc);
+            expLabel.textContent = fmt(exp);
 
-            // 1. Net Cash Flow Logic
-            const netFlow = income - expense;
-            netFlowDisplay.textContent = formatCurrency(netFlow);
-            if (netFlow < 0) {
-                netFlowDisplay.style.color = 'var(--accent-coral)';
-            } else {
-                netFlowDisplay.style.color = 'var(--accent-emerald)';
-            }
+            // Back-calculate a variable ledger row based on sliders to make the ledger look interactive and alive
+            const dynamicFluid = exp - 1650;
+            fluidLedgerAmt.textContent = fmt(-Math.max(0, dynamicFluid)) + '.00';
 
-            // 2. Savings Rate Logic
-            const savingsRate = income > 0 ? Math.round((netFlow / income) * 100) : 0;
-            savingsRateDisplay.textContent = (netFlow > 0 ? savingsRate : 0) + '%';
+            const net = inc - exp;
+            netFlow.textContent = fmt(net);
+            netFlow.style.color = net < 0 ? 'var(--accent-coral)' : 'var(--accent-emerald)';
 
-            // 3. Budget Health Calculation
-            const expenseRatio = (expense / income) * 100;
-            healthBar.style.width = Math.min(expenseRatio, 100) + '%';
+            const rate = inc > 0 ? Math.round((net / inc) * 100) : 0;
+            saveRate.textContent = (net > 0 ? rate : 0) + '%';
 
-            if (expenseRatio <= 50) {
-                healthStatus.textContent = 'Excellent Financial Runway';
+            const ratio = (exp / inc) * 100;
+            healthBar.style.width = Math.min(ratio, 100) + '%';
+
+            if (ratio <= 45) {
+                healthStatus.textContent = 'High-Alpha Capital Retention';
                 healthBar.style.backgroundColor = 'var(--accent-emerald)';
-            } else if (expenseRatio <= 75) {
-                healthStatus.textContent = 'Moderate Expense Volume';
-                healthBar.style.backgroundColor = '#f59e0b'; // Amber warning color
+                aiInsight.textContent = "Your asset scaling velocity is high. Recommend routing surplus liquidity into debt-clearing or long-term investments.";
+            } else if (ratio <= 75) {
+                healthStatus.textContent = 'Balanced Budgetary Equilibrium';
+                healthBar.style.backgroundColor = '#f59e0b';
+                aiInsight.textContent = "Operational expenditures are within safe margins, but scaling non-discretionary costs further could flatten your growth curve.";
             } else {
-                healthStatus.textContent = 'Critical Cash Flow Strain';
+                healthStatus.textContent = 'Asymmetric Budgetary Deficit';
                 healthBar.style.backgroundColor = 'var(--accent-coral)';
+                aiInsight.textContent = "Critical cash burn detected. Outflows are destabilizing your net equity positions. Overhead structural reduction advised.";
             }
 
-            // 4. Predictive Projections Logic
-            forecast3.textContent = formatCurrency(Math.max(0, netFlow * 3));
-            forecast6.textContent = formatCurrency(Math.max(0, netFlow * 6));
-            forecast12.textContent = formatCurrency(Math.max(0, netFlow * 12));
+            fc3.textContent = fmt(Math.max(0, net * 3));
+            fc6.textContent = fmt(Math.max(0, net * 6));
+            fc12.textContent = fmt(Math.max(0, net * 12));
         }
 
-        // Event listeners to make it fully reactive in real-time
-        incomeInput.addEventListener('input', calculateDashboard);
-        expenseInput.addEventListener('input', calculateDashboard);
-
-        // Initial launch run
-        calculateDashboard();
+        incInput.addEventListener('input', runEngine);
+        expInput.addEventListener('input', runEngine);
+        runEngine();
     </script>
 </body>
 </html>
+            
+                    
+            
